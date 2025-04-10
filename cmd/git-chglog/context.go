@@ -16,6 +16,7 @@ type CLIContext struct {
 	Silent           bool
 	NoColor          bool
 	NoEmoji          bool
+	CurrentBranch    bool
 	NoCaseSensitive  bool
 	Query            string
 	NextTag          string

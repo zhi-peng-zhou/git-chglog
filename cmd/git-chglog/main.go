@@ -145,6 +145,13 @@ func CreateApp(actionFunc cli.ActionFunc) *cli.App {
 			EnvVars: []string{"NO_EMOJI"},
 		},
 
+		// current-branch
+		&cli.BoolFlag{
+			Name:    "current-branch",
+			Usage:   "only generate changelog for current branch",
+			EnvVars: []string{"CURRENT_BRANCH"},
+		},
+
 		// no-case
 		&cli.BoolFlag{
 			Name:  "no-case",
@@ -239,6 +246,7 @@ func AppAction(c *cli.Context) error {
 			Silent:           c.Bool("silent"),
 			NoColor:          c.Bool("no-color"),
 			NoEmoji:          c.Bool("no-emoji"),
+			CurrentBranch:    c.Bool("current-branch"),
 			NoCaseSensitive:  c.Bool("no-case"),
 			Query:            c.Args().First(),
 			NextTag:          c.String("next-tag"),

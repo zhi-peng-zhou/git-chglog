@@ -3,6 +3,7 @@ package chglog
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -12,18 +13,20 @@ import (
 )
 
 type tagReader struct {
-	client    gitcmd.Client
-	separator string
-	reFilter  *regexp.Regexp
-	sortBy    string
+	client            gitcmd.Client
+	separator         string
+	reFilter          *regexp.Regexp
+	sortBy            string
+	onlyCurrentBranch bool
 }
 
-func newTagReader(client gitcmd.Client, filterPattern string, sort string) *tagReader {
+func newTagReader(client gitcmd.Client, filterPattern string, sort string, currentBranch bool) *tagReader {
 	return &tagReader{
-		client:    client,
-		separator: "@@__CHGLOG__@@",
-		reFilter:  regexp.MustCompile(filterPattern),
-		sortBy:    sort,
+		client:            client,
+		separator:         "@@__CHGLOG__@@",
+		reFilter:          regexp.MustCompile(filterPattern),
+		sortBy:            sort,
+		onlyCurrentBranch: currentBranch,
 	}
 }
 
@@ -36,12 +39,24 @@ func (r *tagReader) ReadAll() ([]*Tag, error) {
 	)
 
 	tags := []*Tag{}
+	currentBranchTagLines := []string{}
 
 	if err != nil {
 		return tags, fmt.Errorf("failed to get git-tag: %w", err)
 	}
 
 	lines := strings.Split(out, "\n")
+
+	if r.onlyCurrentBranch {
+		currentBranchTags, err2 := r.client.Exec(
+			"tag",
+			"--merged",
+		)
+		if err2 != nil {
+			return tags, fmt.Errorf("failed to get git-tag for current branch: %w", err)
+		}
+		currentBranchTagLines = strings.Split(currentBranchTags, "\n")
+	}
 
 	for _, line := range lines {
 		tokens := strings.Split(line, r.separator)
@@ -51,6 +66,9 @@ func (r *tagReader) ReadAll() ([]*Tag, error) {
 		}
 
 		name := r.parseRefname(tokens[0])
+		if r.onlyCurrentBranch && !slices.Contains(currentBranchTagLines, name) {
+			continue
+		}
 		subject := r.parseSubject(tokens[1])
 		date, err := r.parseDate(tokens[2])
 		if err != nil {

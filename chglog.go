@@ -106,7 +106,7 @@ type Generator struct {
 }
 
 // NewGenerator receives `Config` and create an new `Generator`
-func NewGenerator(logger *Logger, config *Config) *Generator {
+func NewGenerator(logger *Logger, config *Config, currentBranch bool) *Generator {
 	client := gitcmd.New(&gitcmd.Config{
 		Bin: config.Bin,
 	})
@@ -122,7 +122,7 @@ func NewGenerator(logger *Logger, config *Config) *Generator {
 	return &Generator{
 		client:          client,
 		config:          config,
-		tagReader:       newTagReader(client, config.Options.TagFilterPattern, config.Options.Sort),
+		tagReader:       newTagReader(client, config.Options.TagFilterPattern, config.Options.Sort, currentBranch),
 		tagSelector:     newTagSelector(),
 		commitParser:    newCommitParser(logger, client, jiraClient, config),
 		commitExtractor: newCommitExtractor(config.Options),

@@ -70,7 +70,7 @@ func (c *CLI) Run() int {
 		return ExitCodeError
 	}
 
-	err = c.generator.Generate(c.logger, w, c.ctx.Query, changelogConfig)
+	err = c.generator.Generate(c.logger, w, c.ctx.Query, changelogConfig, c.ctx.CurrentBranch)
 	if err != nil {
 		c.logger.Error(err.Error())
 		return ExitCodeError

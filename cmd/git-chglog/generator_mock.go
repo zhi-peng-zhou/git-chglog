@@ -10,6 +10,6 @@ type mockGeneratorImpl struct {
 	ReturnGenerate func(io.Writer, string, *chglog.Config) error
 }
 
-func (m *mockGeneratorImpl) Generate(logger *chglog.Logger, w io.Writer, query string, config *chglog.Config) error {
+func (m *mockGeneratorImpl) Generate(logger *chglog.Logger, w io.Writer, query string, config *chglog.Config, currentBranch bool) error {
 	return m.ReturnGenerate(w, query, config)
 }
