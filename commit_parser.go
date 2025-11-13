@@ -155,6 +155,11 @@ func (p *commitParser) parseCommit(input string) *Commit {
 
 	commit.Refs = p.uniqRefs(commit.Refs)
 	commit.Mentions = p.uniqMentions(commit.Mentions)
+	if p.config.Options.CommitMerges != nil {
+		if m, ok := p.config.Options.CommitMerges[commit.Type]; ok {
+			commit.Type = m
+		}
+	}
 
 	return commit
 }

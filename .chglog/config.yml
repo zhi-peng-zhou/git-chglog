@@ -4,6 +4,8 @@ info:
   title: CHANGELOG
   repository_url: https://github.com/git-chglog/git-chglog
 options:
+  commit_merges:
+    improve: perf
   commits:
     filters:
       Type:

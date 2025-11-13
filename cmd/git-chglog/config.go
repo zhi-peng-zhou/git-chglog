@@ -73,6 +73,7 @@ type JiraOptions struct {
 type Options struct {
 	TagFilterPattern string             `yaml:"tag_filter_pattern"`
 	Sort             string             `yaml:"sort"`
+	CommitMerges     map[string]string  `yaml:"commit_merges"`
 	Commits          CommitOptions      `yaml:"commits"`
 	CommitGroups     CommitGroupOptions `yaml:"commit_groups"`
 	Header           PatternOptions     `yaml:"header"`

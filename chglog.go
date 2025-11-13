@@ -44,6 +44,7 @@ type Options struct {
 	JiraTypeMaps                map[string]string
 	JiraIssueDescriptionPattern string
 	Paths                       []string // Path filter
+	CommitMerges                map[string]string
 }
 
 // Info is metadata related to CHANGELOG
